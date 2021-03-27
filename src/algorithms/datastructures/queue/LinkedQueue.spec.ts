@@ -1,16 +1,16 @@
 import { expect } from 'chai';
-import { ArrayQueue } from './ArrayQueue';
+import { LinkedQueue } from './LinkedQueue';
 
-describe('ArrayQueue', () => {
+describe('LinkedQueue', () => {
 
-  let queue: ArrayQueue<number>;
+  let queue: LinkedQueue<number>;
 
   beforeEach(() => {
-    queue = new ArrayQueue<number>(3);
+    queue = new LinkedQueue<number>(3);
   })
 
   it('should create an empty queue', () => {
-    expect(queue instanceof ArrayQueue).to.equal(true);
+    expect(queue instanceof LinkedQueue).to.equal(true);
 
     expect(queue.isEmpty()).to.be.true;
     expect(queue.size()).to.equal(0);

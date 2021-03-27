@@ -21,8 +21,8 @@ export class ArrayQueue<T> implements Queue<T> {
   }
 
   public offer(elem: T): void {
-    if (this.array.length === this.capacity) {
-      throw new Error('Queue at capacity');
+    if (this.isFull()) {
+      throw new Error('Queue is full');
     }
 
     this.array.push(elem);

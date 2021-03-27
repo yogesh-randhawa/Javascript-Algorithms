@@ -3,6 +3,8 @@ export interface Queue<T> {
 
   isEmpty(): boolean;
 
+  isFull(): boolean;
+
   offer(elem: T): void;
 
   peek(): T;
