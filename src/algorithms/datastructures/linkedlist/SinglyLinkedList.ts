@@ -1,6 +1,6 @@
 import { INode, LinkedList } from './LinkedList';
 
-export class DoublyLinkedList<T> implements LinkedList<T>{
+export class SinglyLinkedList<T> implements LinkedList<T>{
   private sz: number = 0;
   private head: Node<T> = null;
   private tail: Node<T> = null;
@@ -21,14 +21,14 @@ export class DoublyLinkedList<T> implements LinkedList<T>{
   }
 
   public addFirst(elem: T): void {
-    const node = new Node<T>(elem, null, this.head);
-    this.addNode(node);
+    const node = new Node<T>(elem, this.head);
+    this.addNode(node, null, this.head);
     this.head = node;
   }
 
   public addLast(elem: T): void {
-    const node = new Node<T>(elem, this.tail);
-    this.addNode(node);
+    const node = new Node<T>(elem);
+    this.addNode(node, this.tail);
     this.tail = node;
   }
 
@@ -47,30 +47,31 @@ export class DoublyLinkedList<T> implements LinkedList<T>{
       trav = trav.next;
     }
 
-    this.addNode(new Node(elem, trav, trav.next));
+    const node = new Node(elem, trav.next)
+    this.addNode(node, trav, trav.next);
   }
 
   public remove(elem: T): T {
-    let trav = this.head;
-    let node;
-
-    while (!!trav.next) {
-      if (trav.next.data === elem) {
-        node = trav.next;
-        break;
-      }
-      trav = trav.next;
+    if (this.head && this.head.data === elem) {
+      return this.removeFirst();
     }
 
-    return this.removeNode(node);
+    const prev = this.getPrevious(elem);
+    const node = prev && prev.next;
+
+    if (!node) {
+      return;
+    }
+
+    return this.removeNode(node, prev, node.next);
   }
 
   public removeFirst(): T {
-    return this.removeNode(this.head);
+    return this.removeNode(this.head, null, this.head.next);
   }
 
   public removeLast(): T {
-    return this.removeNode(this.tail);
+    return this.remove(this.tail.data);
   }
 
   public peekFirst(): T {
@@ -134,44 +135,59 @@ export class DoublyLinkedList<T> implements LinkedList<T>{
     }
   }
 
-  private addNode(node: Node<T>): void {
-    if (node.prev) {
-      node.prev.next = node;
+  // get the node before the one with value elem or null
+  private getPrevious(elem: T): Node<T> {
+    if (this.size() <= 1) {
+      return null;
+    }
+
+    let trav = this.head;
+    let node;
+
+    while (!!trav && !!trav.next) {
+      if (trav.next.data === elem) {
+        node = trav;
+        break;
+      }
+      trav = trav.next;
+    }
+
+    return node;
+  }
+
+  private addNode(node: Node<T>, prev: Node<T> = null, next: Node<T> = null): void {
+    if (prev) {
+      prev.next = node;
     } else {
       this.head = node;
     }
-
-    if (node.next) {
-      node.next.prev = node;
+    if (next) {
+      node.next = next;
     } else {
       this.tail = node;
     }
-
     this.sz++;
   }
 
-  private removeNode(node: Node<T>): T {
+  private removeNode(node: Node<T>, prev: Node<T>, next: Node<T>): T {
     if (this.isEmpty()) throw new Error('List is empty');
 
     if (!node) return null;
 
     // if node to remove found
-    if (node.prev) {
-      node.prev.next = node.next;
+    if (prev) {
+      prev.next = next;
     } else {
-      this.head = node.next;
+      this.head = next;
     }
-    if (node.next) {
-      node.next.prev = node.prev;
-    } else {
-      this.tail = node.prev;
+    if (!next) {
+      this.tail = prev;
     }
 
     const data: T = node.data;
 
     node.data = null;
     node.next = null;
-    node.prev = null;
 
     this.sz--;
 
@@ -182,12 +198,10 @@ export class DoublyLinkedList<T> implements LinkedList<T>{
 
 class Node<T> implements INode<T> {
   data: T = null;
-  prev: Node<T> = null;
   next: Node<T> = null;
 
-  constructor(data: T, prev: Node<T> = null, next: Node<T> = null) {
+  constructor(data: T, next: Node<T> = null) {
     this.data = data;
-    this.prev = prev;
     this.next = next;
   }
 }
