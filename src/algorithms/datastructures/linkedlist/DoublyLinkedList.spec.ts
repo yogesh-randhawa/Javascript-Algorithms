@@ -33,6 +33,14 @@ describe('DoublyLinkedList', () => {
     expect(linkedList.peekLast).to.throw();
   });
 
+  it('should allow clear', () => {
+    linkedList.addFirst(3);
+    linkedList.addLast(5);
+    expect(linkedList.isEmpty()).to.be.false;
+    linkedList.clear();
+    expect(linkedList.isEmpty()).to.be.true;
+  });
+
   it('should allow addFirst', () => {
     linkedList.addFirst(3);
     expect(linkedList.size()).to.equal(1);

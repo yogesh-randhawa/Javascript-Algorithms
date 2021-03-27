@@ -3,6 +3,8 @@ export interface LinkedList<T> {
 
   isEmpty(): boolean;
 
+  clear(): void;
+
   add(elem: T): void;
 
   addFirst(elem: T): void;

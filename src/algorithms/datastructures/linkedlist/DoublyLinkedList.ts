@@ -16,6 +16,28 @@ export class DoublyLinkedList<T> implements LinkedList<T>{
     return !this.size();
   }
 
+  public clear(): void {
+    if (this.isEmpty()) return;
+
+    let trav = this.head;
+
+    while (trav.next) {
+      let node = trav.next;
+      node.data = null;
+      node.prev = null;
+      node.next = null;
+
+      node = null;
+
+      trav = trav.next;
+    }
+
+    trav = null;
+    this.head = null;
+    this.tail = null;
+    this.sz = 0;
+  }
+
   public add(elem: T): void {
     this.addLast(elem);
   }
