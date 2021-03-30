@@ -1,27 +1,19 @@
 import { expect } from 'chai';
-import { PQueue } from './PQueue';
+import { PriorityQueue } from './PriorityQueue';
 
-describe('PQueue', () => {
+describe('PriorityQueue', () => {
 
-  let pQueue: PQueue<number>;
+  let pQueue: PriorityQueue<number>;
 
   beforeEach(() => {
-    pQueue = new PQueue<number>();
+    pQueue = new PriorityQueue<number>(3);
   })
 
   it('should create an empty pq', () => {
-    expect(pQueue instanceof PQueue).to.equal(true);
+    expect(pQueue instanceof PriorityQueue).to.equal(true);
 
     expect(pQueue.isEmpty()).to.be.true;
     expect(pQueue.size()).to.equal(0);
-  });
-
-  it('should return null on peek from empty pq', () => {
-    expect(pQueue.peek()).to.be.null;
-  });
-
-  it('should return null on poll from empty pq', () => {
-    expect(pQueue.poll()).to.be.null;
   });
 
   it('should allow offer', () => {
@@ -39,6 +31,34 @@ describe('PQueue', () => {
     pQueue.clear();
 
     expect(pQueue.isEmpty()).to.be.true;
+  });
+
+  it('should allow isFull', () => {
+    pQueue.offer(3);
+    pQueue.offer(5);
+    pQueue.offer(1);
+
+    expect(pQueue.isFull()).to.be.true;
+  });
+
+  it('should throw error on offer if full', () => {
+    pQueue.offer(3);
+    pQueue.offer(5);
+    pQueue.offer(1);
+
+    expect(pQueue.offer.bind(pQueue, 2)).to.throw;
+  });
+
+  it('should throw error on peek from empty pq', () => {
+    expect(pQueue.peek).to.throw;
+  });
+
+  it('should throw error on poll from empty pq', () => {
+    expect(pQueue.poll).to.throw;
+  });
+
+  it('should throw error on remove from empty pq', () => {
+    expect(pQueue.remove).to.throw;
   });
 
   it('should allow peek at non empty pq', () => {
@@ -79,7 +99,7 @@ describe('PQueue', () => {
   });
 
   it('should allow isMinHeap', () => {
-    pQueue = new PQueue<number>([5, 4, 3, 2, 1]);
+    pQueue = new PriorityQueue<number>(5,[5, 4, 3, 2, 1]);
 
     expect(pQueue.toString()).to.equal('1,2,3,5,4');
     expect(pQueue.isMinHeap()).to.be.true;

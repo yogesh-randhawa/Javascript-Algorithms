@@ -1,4 +1,7 @@
-export class PQueue<T> {
+import { Queue } from '../queue/Queue';
+
+export class PriorityQueue<T> implements Queue<T> {
+  private readonly capacity = 0;
   private readonly heap: Array<T> = null;
 
   private readonly comparator: Comparator<T> = new class implements Comparator<T> {
@@ -9,7 +12,8 @@ export class PQueue<T> {
     }
   }();
 
-  constructor(elems: Array<T> = [], comparator?: Comparator<T>) {
+  constructor(capacity, elems: Array<T> = [], comparator?: Comparator<T>) {
+    this.capacity = capacity;
     this.comparator = comparator || this.comparator;
     this.heap = [...elems];
 
@@ -30,27 +34,45 @@ export class PQueue<T> {
     return !this.size();
   }
 
+  public isFull(): boolean {
+    return this.size() === this.capacity;
+  }
+
   public clear(): void {
     this.heap.length = 0;
   }
 
-  public peek(): T {
-    if (this.isEmpty()) return null;
-
-    return this.heap[0];
-  }
-
-  public poll(): T {
-    return this.removeAt(0);
-  }
-
   public offer(elem: T): number {
+    if (this.isFull()) {
+      throw new Error('Priority queue is full');
+    }
+
     this.heap.push(elem);
 
     return this.swim(this.size() - 1);
   }
 
+  public peek(): T {
+    if (this.isEmpty()) {
+      throw new Error('Priority queue is empty');
+    }
+
+    return this.heap[0];
+  }
+
+  public poll(): T {
+    if (this.isEmpty()) {
+      throw new Error('Priority queue is empty');
+    }
+
+    return this.removeAt(0);
+  }
+
   public remove(elem: T): T {
+    if (this.isEmpty()) {
+      throw new Error('Priority queue is empty');
+    }
+
     let index = 0;
 
     while(index++ < this.size()) {
