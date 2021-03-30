@@ -2,7 +2,7 @@ import { LinkedList } from '../linkedlist/LinkedList';
 import { SinglyLinkedList } from '../linkedlist/SinglyLinkedList';
 import { Queue } from './Queue';
 
-export class LinkedQueue<T> implements Queue<T> {
+export class LinkedListQueue<T> implements Queue<T> {
   private readonly capacity = 0;
   private list: LinkedList<T> = new SinglyLinkedList<T>();
 
